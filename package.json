@@ -11,7 +11,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "run": "nodemon src/index.js",
+    "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
   "devDependencies": {
@@ -21,6 +21,6 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongodb": "^7.0.0",
-    "moongoose": "^0.0.5"
+    "mongoose": "^9.0.0"
   }
 }
