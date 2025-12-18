@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/asynchandler.js"
 import { User } from "../models/user.model.js"
 import {uploadToCloudinary} from "../service/cloudnary.service.js"
+import { authHandler } from "../middleware/auth.middleware.js"
 
 const registerUser = asyncHandler(
     async (req,res) =>{
@@ -119,7 +120,7 @@ const loginUser = asyncHandler(
         })
       }
       // check password correct or not
-      const userPasswordIsCorrect =  User.isPasswordCorrect(password);
+      const userPasswordIsCorrect = await user.isPasswordCorrect(password);
 
       if(!userPasswordIsCorrect){
         res.status(401).json({
@@ -132,7 +133,7 @@ const loginUser = asyncHandler(
        const {refreshToken , accessToken }=refreshAndAccesTokenGenerator(user._id);
 
 
-       const loggedUser = User.findOne(user._id).select(
+       const loggedUser = await  User.findOne(user._id).select(
         "-password"
        )
 
@@ -154,4 +155,34 @@ const loginUser = asyncHandler(
      }
 )
 
-export {registerUser,loginUser}
+const logoutUser = asyncHandler(
+     async(req,res)=>{
+        await User.findByIdAndUpdate(req.user._id,
+            {
+                $set:{
+                     refreshToken : undefined
+                }
+                
+            },
+            {
+                new:true
+            }
+        )
+
+        const option ={
+            httpOnly:true,
+            secure:true
+        }
+
+        res.status(201)
+        .clearCookie(accesstoken,option)
+        .clearCookie(refreshtoken,option)
+        .json({
+            success:true,
+            message:"logout success"
+        })
+
+     }
+)
+
+export {registerUser,loginUser,logoutUser}

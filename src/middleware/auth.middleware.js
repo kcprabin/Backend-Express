@@ -12,12 +12,12 @@ export const authHandler = asyncHandler(async (req, res, next) => {
          message: "not token",
          sucess: false,
        });
-     }
+     } 
    
      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN);
      // validation 
    
-     const user = await User.findById(decodedToken._id);
+     const user = await User.findById(decodedToken._id).select("-password -refreshToken");
    
      // finding user
    
