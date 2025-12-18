@@ -63,7 +63,7 @@ const registerUser = asyncHandler(
         if(!createdUser){
             return res.status(400).json({
                 message:"error in creating database",
-                success:fale
+                success:false
             })
         }
 
