@@ -30,19 +30,22 @@ const registerUser = asyncHandler(
                 message:"already a user "
             })
         }
+
+        
         // avater and cover image 
 
-          const avater = req.files?.avatar[0]?.path
-          const coverimage = req.files?.coverimage[0]?.path
+          const avater = req.files?.avatar?.[0]?.path
+          const coverimage = req.files?.coverimage?.[0]?.path
 
 
-         const uploadedAvater = await uploadToCloudinary(avater)
-         const UploadedCoverimage = await uploadToCloudinary(coverimage)
+         const uploadedAvater = await uploadToCloudinary(avater);
+         const UploadedCoverimage =coverimage? await uploadToCloudinary(coverimage):null;
+         
 
 
-         if(!uploadToCloudinary){
+         if(!uploadedAvater){
             return res.status(400).json({
-                success:"false",
+                success:false,
                 message:"failed to upload"
             })
          }
@@ -51,7 +54,7 @@ const registerUser = asyncHandler(
         const user = await User.create({
             fullname:fullname,
             username:username.trim().toLowerCase(),
-            avater:uploadedAvater.url,
+            avatar:uploadedAvater.url,
             coverimage:UploadedCoverimage?.url || "",
             email : email,
             password : password
@@ -72,7 +75,7 @@ const registerUser = asyncHandler(
         return res.status(201).json({
             success:true,
             message:"User created succesfully",
-            Userdata: user
+            Userdata: createdUser
         })
     }
 )
