@@ -142,7 +142,7 @@ const loginUser = asyncHandler(
        }
 
       return res.status(201)
-      .cookie("accesstoke",accessToken,option)
+      .cookie("accesstoken",accessToken,option)
       .cookie("refreshtoken", refreshToken , option)
       .json({
         message:"login succesful",
